@@ -1,5 +1,7 @@
 [workspace]
 members=[
 "./",
-"test_mod"
+"test_mod",
+"test_string",
+"test_smart_pointer"
 ]

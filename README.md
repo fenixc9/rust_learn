@@ -5,3 +5,6 @@
 ### mod，rs文件
 [mod和rs文件](doc/mod.md)
 ### 字符串
+[字符串](doc/string.md)
+### 智能指针
+[智能指针](doc/pointer.md)
