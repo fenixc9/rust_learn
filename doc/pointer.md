@@ -29,3 +29,23 @@ fn t2() {
 }
 ```
 
+3. `drop`是显式回收
+```rust
+#[test]
+fn t3() {
+    let rc = Rc::new("this is a str");
+    let rc1 = rc.clone();
+    let rc2 = rc.clone();
+    let rc3 = rc.clone();
+
+    println!("{}", Rc::strong_count(&rc));
+    drop(rc3);
+    println!("{}", Rc::strong_count(&rc));
+}
+```
+`drop` 后`strong_count`就会减1
+
+### Arc
+是Rc的跨线程版本
+
+
