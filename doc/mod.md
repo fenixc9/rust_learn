@@ -31,7 +31,34 @@ fn main() {
 #### mod子模块互相调用
 比如my_mod.rs下AB两个模块互相调用
 ```rust
+// mod_call.rs
+mod A {
+    struct A1;
+    use super::B;
+    fn fooA(){
+        let b1 = B::B1 {};
+    }
+}
 
-
+mod B{
+    pub struct B1;
+    fn fooB(){}
+}
 ```
+可以看到use super关键字可以访问到另一个子模块。
+
+#### 模块文件之间调用
+```rust
+// my_mod.rs
+pub mod B {
+    use self::super::A;
+    pub struct D;
+    use crate::mod_call;
+    pub fn getC(){
+        let c = A::C {};
+        let side = mod_call::OutSide {};
+    }
+}
+```
+可以看到use crate可以访问到当前crate下的任意mod
 

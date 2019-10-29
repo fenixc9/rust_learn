@@ -4,10 +4,13 @@ pub mod A {
     }
 }
 
+
 pub mod B {
     use self::super::A;
     pub struct D;
+    use crate::mod_call;
     pub fn getC(){
         let c = A::C {};
+        let side = mod_call::OutSide {};
     }
 }

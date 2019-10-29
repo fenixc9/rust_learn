@@ -1,4 +1,5 @@
 mod my_mod;
+mod mod_call;
 
 fn main() {
     let a = my_mod::A::C {};
