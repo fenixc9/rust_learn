@@ -2,7 +2,7 @@ use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 
-pub fn run_sync_channel(){
+pub fn run_sync_channel() {
     let (tx, rx) = mpsc::channel();
 
     thread::spawn(move || {
@@ -30,7 +30,7 @@ pub fn run_sync_channel(){
     //Got: thread
 }
 
-pub fn run_async_channel(){
+pub fn run_async_channel() {
     let (tx, rx) = mpsc::sync_channel(0);
 
     thread::spawn(move || {
@@ -56,4 +56,21 @@ pub fn run_async_channel(){
     //Got: the
     //Got: thread
     //send finish
+}
+
+pub fn multi_sender_one_receiver() {
+    let (send, receiver) = mpsc::channel();
+    for i in 0..10 {
+        let sender = send.clone();
+        let handle = thread::spawn(move || {
+            for y in 0..100 {
+                sender.send(y).unwrap();
+            }
+        });
+    }
+    let mut counter = 0;
+    for x in receiver {
+        counter += 1;
+        println!("receiver:{}", counter);
+    }
 }

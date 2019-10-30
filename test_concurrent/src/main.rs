@@ -3,7 +3,8 @@ use std::time::Duration;
 use std::sync::mpsc;
 
 mod channel;
-
+mod thread_test;
+mod mutex;
 fn main() {
 
 }
@@ -32,4 +33,29 @@ fn t2() {
 #[test]
 fn t3() {
     channel::run_async_channel()
+}
+
+#[test]
+fn t4() {
+    thread_test::create_thread();
+}
+
+#[test]
+fn t5() {
+    thread_test::park_thread();
+}
+
+#[test]
+fn t6() {
+    thread_test::create_thread_move();
+}
+
+#[test]
+fn t7() {
+    thread_test::create_thread_no_move();
+}
+
+#[test]
+fn t8() {
+    channel::multi_sender_one_receiver()
 }

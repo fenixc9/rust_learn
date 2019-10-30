@@ -82,6 +82,58 @@ fn t3() {
 
 可以看到，在消费者被阻塞的情况下，生产者也被阻塞了。
 
-
-
+### thread
+Rust线程就是Os线程
+创建线程通常调用spawn传入一个lambda表达式。
+```rust
+pub fn create_thread() {
+    let handle = thread::spawn(|| {
+        for x in 0..10 {
+            println!("{}", x);
+            thread::sleep(Duration::from_secs(1))
+        }
+    });
+    handle.join();
+}
+```
+闭包外传入要加move语义
+```rust
+pub fn create_thread_no_move() {
+    let a = 10;
+    let handle = thread::spawn(|| {
+        println!("{}",a);
+    });
+    handle.join();
+}
+```
+按照move语义，被移动到闭包里就不能在调用了
+```rust
+pub fn create_thread_move() {
+    println!("create_thread_move");
+    let a = "this is str".to_string();
+    let handle = thread::spawn(move || {
+        println!("spawn {}",a);
+    });
+    thread::sleep(Duration::from_secs(1));
+    println!("create_thread_move {}",a);
+    handle.join();
+}
+```
+上面的代码会报错`value borrowed here after move`.
+##### thread park
+停止当前线程
+```rust
+pub fn park_thread() {
+    let handle = thread::spawn(|| {
+        for x in 0..10 {
+            if x > 4 {
+                thread::park()
+            }
+            println!("{}", x);
+            thread::sleep(Duration::from_secs(1))
+        }
+    });
+    handle.join();
+}
+```
 
