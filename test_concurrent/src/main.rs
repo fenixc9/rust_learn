@@ -6,9 +6,9 @@ mod channel;
 mod thread_test;
 mod mutex;
 mod arc;
-fn main() {
+mod atomic;
+fn main() {}
 
-}
 #[test]
 fn t1() {
     // 直接用static变量，不加任何同步措施
@@ -62,11 +62,16 @@ fn t8() {
 }
 
 #[test]
-fn t9(){
+fn t9() {
     arc::arc_cross_thread()
 }
 
 #[test]
-fn t10(){
+fn t10() {
     arc::arc_one_write_multi_read()
+}
+
+#[test]
+fn t11() {
+    atomic::atomic_test()
 }

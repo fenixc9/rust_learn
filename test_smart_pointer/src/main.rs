@@ -7,6 +7,8 @@ use std::borrow::{BorrowMut, Borrow};
 use std::ops::Add;
 use std::env::var;
 
+mod cell;
+
 #[test]
 fn t1() {
     let rc = Rc::new(32);
@@ -54,8 +56,12 @@ fn t5() {
     }
 }
 
-
 #[test]
 fn t7() {
+    cell::cell_use_int()
+}
 
+#[test]
+fn t8() {
+    cell::test_refcell()
 }
