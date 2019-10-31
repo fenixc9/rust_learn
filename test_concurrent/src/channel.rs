@@ -73,4 +73,15 @@ pub fn multi_sender_one_receiver() {
         counter += 1;
         println!("receiver:{}", counter);
     }
+    //receiver:1
+    //receiver:2
+    //...
+    //receiver:993
+    //receiver:994
+    //receiver:995
+    //receiver:996
+    //receiver:997
+    //receiver:998
+    //receiver:999
+    //receiver:1000
 }

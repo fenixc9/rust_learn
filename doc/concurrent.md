@@ -7,11 +7,6 @@
 
 应用层就是和golang类似的channel，区别在于Rust的channel的生产者分为同步发送和异步发送。
 
-### thread
-Rust的线程对应OS线程，同步标准库。
-##### 创建线程
-调用`thread::spawn`函数创建线程
-
 ### channel
 ```rust
 #[test]
@@ -82,6 +77,41 @@ fn t3() {
 
 可以看到，在消费者被阻塞的情况下，生产者也被阻塞了。
 
+##### 多生产者，单消费者
+mpsc channel的应用场景通常是clone多出个，构建多个生产者，分散到多个线程中，然后由一个消费者消费，
+跟他的名称相符（mpsc:multi producer single consumer）
+```rust
+pub fn multi_sender_one_receiver() {
+    let (send, receiver) = mpsc::channel();
+    for i in 0..10 {
+        let sender = send.clone();
+        let handle = thread::spawn(move || {
+            for y in 0..100 {
+                sender.send(y).unwrap();
+            }
+        });
+    }
+    let mut counter = 0;
+    for x in receiver {
+        counter += 1;
+        println!("receiver:{}", counter);
+    }
+    //receiver:1
+    //receiver:2
+    //...
+    //receiver:993
+    //receiver:994
+    //receiver:995
+    //receiver:996
+    //receiver:997
+    //receiver:998
+    //receiver:999
+    //receiver:1000
+}
+
+```
+可以看到上面的示例代码正确的输出了生产者发送的消息数，而消息是由10个线程分别发送的。
+
 ### thread
 Rust线程就是Os线程
 创建线程通常调用spawn传入一个lambda表达式。
@@ -137,3 +167,23 @@ pub fn park_thread() {
 }
 ```
 
+### Arc指针
+用于跨线程的Rc操作。通常可以用于跨线程共享数据
+
+```rust
+pub fn arc_cross_thread() {
+    let arc = Arc::new(String::from("aabbcc"));
+
+    for index in 0..10 {
+        let a = arc.clone();
+        thread::spawn(move || {
+            thread::sleep(Duration::from_millis(300));
+            println!("{},{:?}", Arc::strong_count(&a), thread::current());
+            drop(a);
+        });
+    }
+    thread::sleep(Duration::from_secs(3));
+    let i = Arc::strong_count(&arc);
+    println!("{}", i);
+}
+```

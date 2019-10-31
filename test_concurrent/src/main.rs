@@ -5,6 +5,7 @@ use std::sync::mpsc;
 mod channel;
 mod thread_test;
 mod mutex;
+mod arc;
 fn main() {
 
 }
@@ -58,4 +59,14 @@ fn t7() {
 #[test]
 fn t8() {
     channel::multi_sender_one_receiver()
+}
+
+#[test]
+fn t9(){
+    arc::arc_cross_thread()
+}
+
+#[test]
+fn t10(){
+    arc::arc_one_write_multi_read()
 }
