@@ -63,5 +63,10 @@ fn t7() {
 
 #[test]
 fn t8() {
-    cell::test_refcell()
+    cell::test_refcell_try_borrow()
+}
+
+#[test]
+fn t9() {
+    cell::test_rc_refcell_1()
 }

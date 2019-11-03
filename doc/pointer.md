@@ -86,3 +86,100 @@ pub fn test_refcell() {
     //[1, 2, 3, 4, 5]
 }
 ```
+
+如果连续调用`borrow_mut`生成可变引用就会在运行时出现panic
+```rust
+pub fn test_refcell_multi_borrow_mut() {
+    let shard_vec = RefCell::new(vec![1, 2, 3]);
+    let s1 = shard_vec.borrow_mut();
+    let s2 = shard_vec.borrow_mut();
+    // panicked at 'already borrowed: BorrowMutError', src\libcore\result.rs:1084:
+}
+```
+
+但是如果一次调用生成`borrow_mut`后立刻结束它的声明周期是没问题的。
+```rust
+pub fn test_refcell_multi_borrow_mut_1() {
+    let shard_vec = RefCell::new(vec![1, 2, 3]);
+    shard_vec.borrow_mut().push(4);
+    shard_vec.borrow_mut().push(5);
+    // RefCell { value: [1, 2, 3, 4, 5] }
+}
+```
+
+`borrow`同时存在多个则是没问题的
+```rust
+pub fn test_refcell_multi_borrow_() {
+    let shard_vec = RefCell::new(vec![1, 2, 3]);
+    let s1 = shard_vec.borrow();
+    let s2 = shard_vec.borrow();
+    println!("{:?}",shard_vec);
+    // RefCell { value: [1, 2, 3] }
+}
+```
+
+同时存在`borrow`和`borrow_mut`也是不行的
+```rust
+pub fn test_refcell_borrow_and_borrow_mut() {
+    let shard_vec = RefCell::new(vec![1, 2, 3]);
+    let s1 = shard_vec.borrow();
+    let s2 = shard_vec.borrow_mut();
+    println!("{:?}",shard_vec);
+    // panicked
+}
+```
+
+但是我们为了避免运行时异常，可以用`try_borrow`和`try_borrow_mut`
+```rust
+pub fn test_refcell_try_borrow() {
+    let shard_vec = RefCell::new(vec![1, 2, 3]);
+    let x = match shard_vec.try_borrow_mut() {
+        Ok(v) => { v }
+        _ => {
+            panic!("LOG: shard_vec has been borrowed");
+        }
+    };
+    let x1 = match shard_vec.try_borrow_mut() {
+        Ok(v) => { v }
+        _ => {
+            panic!("LOG: shard_vec has been borrowed");
+        }
+    };
+}
+```
+这里也是直接抛出panic
+### Rc和Refcell
+Rc和Arc和Refcell，cell这些具有内部可变性的指针常常一起用，比如`Rc<Refcell<T>>`这样
+
+一个例子
+```rust
+pub fn test_rc_refcell_1() {
+    let rc1 = Rc::new(RefCell::new(vec![1, 2, 3]));
+    println!("1strong count:{}", Rc::strong_count(&rc1));
+
+    modify1(rc1.clone());
+    println!("2strong count:{}", Rc::strong_count(&rc1));
+
+    modify2(rc1.clone());
+    println!("3strong count:{}", Rc::strong_count(&rc1));
+    println!("{:?}", rc1);
+    // 1strong count:1
+    //4strong count:2
+    //2strong count:1
+    //5strong count:2
+    //3strong count:1
+}
+
+fn modify1(i: Rc<RefCell<Vec<i32>>>) {
+    println!("4strong count:{}", Rc::strong_count(&i));
+    i.borrow_mut().push(4);
+}
+
+fn modify2(i: Rc<RefCell<Vec<i32>>>) {
+    println!("5strong count:{}", Rc::strong_count(&i));
+    i.borrow_mut().push(4);
+}
+```
+在这段示例中，`test_rc_refcell_1`中观察到的Rc strongcount始终是1，
+而传入modify函数的Rc会随着modify执行的结束自动回收，所以最后当这个用例fn执行完毕时，
+所有Rc指针都会被自动回收。Rc归零，资源回收。
