@@ -1,13 +1,13 @@
 use std::rc::Rc;
 use std::fmt::Debug;
+use std::ops::Add;
+use std::rc::Rc;
 use std::sync::Arc;
 use std::thread;
 use std::time::Duration;
-use std::borrow::{BorrowMut, Borrow};
-use std::ops::Add;
-use std::env::var;
 
 mod cell;
+mod linked_list;
 
 #[test]
 fn t1() {
@@ -69,4 +69,9 @@ fn t8() {
 #[test]
 fn t9() {
     cell::test_rc_refcell_1()
+}
+
+#[test]
+fn t10() {
+    cell::test_refcell_panic()
 }

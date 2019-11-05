@@ -1,6 +1,5 @@
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
-use std::borrow::Borrow;
 
 pub fn cell_use_int() {
     let cell = Cell::new(0);
@@ -96,4 +95,16 @@ fn modify1(i: Rc<RefCell<Vec<i32>>>) {
 fn modify2(i: Rc<RefCell<Vec<i32>>>) {
     println!("5strong count:{}", Rc::strong_count(&i));
     i.borrow_mut().push(4);
+}
+
+pub fn test_refcell_panic() {
+    let shard_vec = RefCell::new(vec![1, 2, 3]);
+    let s1 = &shard_vec;
+    let s2 = &s1;
+    s1.borrow_mut().push(4);
+
+    s2.borrow_mut().push(5);
+    println!("{:?}",s2.borrow());
+    //[1, 2, 3, 4]
+    //[1, 2, 3, 4, 5]
 }

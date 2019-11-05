@@ -7,6 +7,8 @@
 
 应用层就是和golang类似的channel，区别在于Rust的channel的生产者分为同步发送和异步发送。
 
+Rust的思想是"共享不可变，可变不共享"
+
 ### channel
 ```rust
 #[test]
