@@ -75,3 +75,8 @@ fn t10() {
 fn t11() {
     atomic::atomic_test()
 }
+
+#[test]
+fn t12() {
+    mutex::mutex_test()
+}
