@@ -1,10 +1,10 @@
-use std::borrow::BorrowMut;
+use std::borrow::{Borrow, BorrowMut};
 use std::cell::RefCell;
 use std::net::Shutdown::Read;
+use std::ops::{Deref, DerefMut};
 use std::rc::Rc;
 
 use crate::linked_list::my_link_list::List;
-use std::ops::Deref;
 
 mod my_link_list {
     type NextNode<T> = Option<Box<Node<T>>>;
@@ -83,8 +83,16 @@ mod my_link_list {
             List { len: 0, next: None }
         }
 
-        pub fn get_next(&mut self) -> Option<&mut Node<T>> {
+        pub fn get_next_mut(&mut self) -> Option<&mut Node<T>> {
             if let Some(ref mut x) = self.next {
+                return x.get_next_mut();
+            }
+            None
+        }
+
+
+        pub fn get_next(&self) -> Option<&Node<T>> {
+            if let Some(mut x) = &self.next {
                 return x.get_next();
             }
             None
@@ -95,7 +103,7 @@ mod my_link_list {
                 return None;
             }
 
-            let node = self.get_next().unwrap();
+            let node = self.get_next_mut().unwrap();
             if index == 1 {
                 return Some(node);
             }
@@ -152,22 +160,18 @@ mod my_link_list {
     }
 }
 
-//impl<T> Iterator for List<T> {
-//    type Item = my_link_list::Node<T>;
-//
-//    fn next(&mut self) -> Option<Self::Item> {
-//        let option = self.get_next();
-//        let x = match option {
-//            Some(o) => {
-//                Some(o.clone())
-//            }
-//            _ => {
-//                None
-//            }
-//        };
-//        x
-//    }
-//}
+impl<T> Iterator for List<T> {
+    type Item = my_link_list::Node<T>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+//        if let Some(x) = self.get_next() {
+//            let x1 = x.;
+//            return Some(x.deref())
+//        }
+//        return None
+        let Some(o) = self.get_next();
+    }
+}
 
 pub fn test_linked_list() {
     let mut my_list = List::<u8>::new();
@@ -177,12 +181,7 @@ pub fn test_linked_list() {
     my_list.push(3);
     my_list.push(4);
 
-    println!("{:?}", my_list.len());
-    println!("{:?}", my_list.get_last_value());
-    my_list.pop();
-    println!("{:?}", my_list);
-
-//    for x in my_list {
-//        println!("{:?}", x);
-//    }
+    for x in my_list {
+        println!("{:?}", x);
+    }
 }

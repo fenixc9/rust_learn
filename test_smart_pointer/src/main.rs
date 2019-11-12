@@ -1,13 +1,15 @@
 use std::rc::Rc;
 use std::fmt::Debug;
 use std::ops::Add;
-use std::rc::Rc;
 use std::sync::Arc;
 use std::thread;
 use std::time::Duration;
+use std::collections::LinkedList;
 
 mod cell;
 mod linked_list;
+mod refcell_linked_list;
+mod option;
 
 #[test]
 fn t1() {
@@ -74,4 +76,9 @@ fn t9() {
 #[test]
 fn t10() {
     cell::test_refcell_panic()
+}
+
+#[test]
+fn t11(){
+    linked_list::test_linked_list();
 }
