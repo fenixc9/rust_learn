@@ -26,23 +26,6 @@ impl<T> Node<T> {
     }
 }
 
-//impl<T> Iterator for Node<T> {
-//    type Item = Node<T>;
-//
-//    fn next(&mut self) -> Option<Self::Item> {
-//        match &self.next {
-//            Some(rc) => {
-//                let x = rc.borrow();
-//                return Some(rc.clone().borrow().deref().deref());
-//            }
-//            _ => {
-//                return None;
-//            }
-//        }
-//    }
-//}
-
-
 pub fn test_ref_cell_list() {
     let mut node = Node::new(1);
     node.set_next_node(Some(Node::new(2)));

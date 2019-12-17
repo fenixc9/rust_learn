@@ -1,7 +1,6 @@
-use std::thread;
+use std::borrow::{Borrow, BorrowMut};
 use std::sync::{Arc, Mutex};
-use std::borrow::{BorrowMut, Borrow};
-
+use std::thread;
 
 pub fn mutex_test() {
     const COUNT: i32 = 1000;
