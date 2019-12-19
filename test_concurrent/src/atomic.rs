@@ -6,6 +6,7 @@ use std::time::Duration;
 pub fn atomic_test() {
     const COUNT: i32 = 2000;
     let spinlock = Arc::new(AtomicUsize::new(1));
+
     let spinlock_clone = spinlock.clone();
     let thread = thread::spawn(move || {
         for x in 0..COUNT {

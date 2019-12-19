@@ -9,5 +9,6 @@ members=[
 "test_lifetime",
 "test_macro",
 "test_api",
-"test_borrow"
+"test_borrow",
+"test_async"
 ]

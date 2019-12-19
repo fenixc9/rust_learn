@@ -1,5 +1,5 @@
 [package]
-name = "test_macro"
+name = "test_async"
 version = "0.1.0"
 authors = ["hao.liu <hao.liu@aimapnet.com>"]
 edition = "2018"
@@ -7,5 +7,6 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-pm={path="pm"}
-
+hyper = "0.12.33"
+tokio-core = "0.1.17"
+futures = "0.1.29"
