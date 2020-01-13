@@ -8,6 +8,7 @@ members=[
 "test_collection",
 "test_lifetime",
 "test_macro",
-"test_datastruct",
-"test_linked_list"
+"test_api",
+"test_borrow",
+"test_async"
 ]
